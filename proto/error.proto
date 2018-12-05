@@ -1,0 +1,34 @@
+syntax = "proto3";
+package errorx;
+
+option go_package = "./;errorx";
+option optimize_for = LITE_RUNTIME;
+
+// Error is a predefined structured which contains relevant information about an error
+message Error {
+    // Code indicates the type of error with predefined codes. Codes should match HTTP status codes
+    // if used for RESTful endpoints so the `net` package can easily use these codes for the responses
+    int32 code = 1;
+    // Timestamp is the Unix UTC time when the error occurred
+    string timestamp = 2;
+    // Message is any message specific to the error that occurred
+    string message = 3;
+    // ErrorDetails contains any other error information that caused this error
+    repeated ErrorDetail details = 4;
+    // Stack is a simplified stack trace, it keeps track of the caller lines that have called any
+    // function in the errorx package to create or wrap an error
+    repeated string trace = 5;
+    // Fields is a dictionary that contains additional error data
+    map<string, string> fields = 6;
+}
+
+// ErrorDetail contains the basic fields of a go error so it can be appended as an
+// internal error in `Error`
+message ErrorDetail {
+    // Error is the error message of an internal error
+    string error = 1;
+    // Details is meant to describe how the error occurred. Eg: Error obtained with connecting to a DB
+    string details = 2;
+    // Caller represents the caller data where an error occurred (filename and line number)
+    string caller = 3;
+}
