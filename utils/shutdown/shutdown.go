@@ -31,7 +31,7 @@ func SetLogger(l ILogger) {
 // ListenForSignals for a TERM or INT signal.  Once the signal is caught all shutdown hooks will be
 // executed allowing a graceful shutdown
 func ListenForSignals() {
-	quit := make(chan os.Signal)
+	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 
 	go func() {
