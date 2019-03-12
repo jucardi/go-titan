@@ -85,7 +85,7 @@ func stackFrames(skip int) (stack []*StackFrame, maxFileLen int, maxFnLen int) {
 
 	for ; ok; frame, ok = frames.Next() {
 		file := getCallerString(frame.File)
-		if strings.TrimSpace(frame.File) == "" || strings.HasPrefix(file, "go.riotgames.com/ssp/go-jarvis/utils/runtime") {
+		if strings.TrimSpace(frame.File) == "" || strings.HasPrefix(file, "github.com/jucardi/go-titan/runtime") {
 			continue
 		}
 		pkg := strings.Split(file, "/")
