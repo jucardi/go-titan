@@ -1,0 +1,11 @@
+version: '3.3'
+
+services:
+  builder:
+    image: jucardi/golang-protobuf:1.17
+    container_name: go-foundation-builder
+    command: bash -c "cd /app && make protoc format test"
+    volumes:
+      - ${PWD}:/app
+      - ${GOPATH}/pkg/mod:/go/pkg/mod
+    tty: true
