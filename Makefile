@@ -4,8 +4,8 @@ check: format vet
 
 format:
 	@echo "formatting files..."
-	@echo "  > getting goimports" && GOM111MODULE=off go get golang.org/x/tools/cmd/goimports
-	@echo "  > getting goimports-blank-rm" && GOM111MODULE=off go get github.com/jucardi/goimports-blank-rm
+	@echo "  > getting goimports" && go install golang.org/x/tools/cmd/goimports@v0.1.7
+	@echo "  > getting goimports-blank-rm" && go install github.com/jucardi/goimports-blank-rm@latest
 	@echo "  > executing goimports-blank-rm" && goimports-blank-rm . 1>/dev/null 2>/dev/null
 	@echo "  > executing goimports" && goimports -w -l $(shell find . -type f -name '*.go' -not -path "./vendor/*") 1>/dev/null 2>/dev/null || true
 	@echo "  > executing gofmt" && gofmt -s -w -l $(shell find . -type f -name '*.go' -not -path "./vendor/*") 1>/dev/null
@@ -18,7 +18,7 @@ templates: protoc format
 
 protoc:
 	@echo "generating protobuf..."
-	@go get github.com/golang/protobuf/protoc-gen-go
+	@go getgoogle.golang.org/protobuf/protoc-gen-go
 	@GO111MODULE=off go get github.com/jucardi/protoc-go-inject-tag
 	@GO111MODULE=off go install github.com/jucardi/protoc-go-inject-tag
 	@protoc -I=$(PWD)/net/errorx --go_out=$(PWD)/net/errorx $(PWD)/net/errorx/error.proto

@@ -9,7 +9,7 @@ import (
 	"github.com/jucardi/go-titan/errors"
 	"github.com/jucardi/go-titan/utils/maps"
 	"github.com/jucardi/go-titan/utils/reflectx"
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 )
 
 const (
