@@ -29,6 +29,11 @@ func Dial(cfg ...*Config) (IClient, error) {
 		return nil, err
 	}
 
+	ret := &mgoClient{
+		client: client,
+		dbName: c.dbName(),
+	}
+
 	name := defaultClient
 	if c.Name != "" {
 		name = c.Name
@@ -36,9 +41,9 @@ func Dial(cfg ...*Config) (IClient, error) {
 
 	current := Get(name)
 
-	if err := beans.Register(ref, name, client); err != nil {
+	if err := beans.Register(ref, name, ret); err != nil {
 		logx.WithObj(
-			client.Disconnect(context.Background()),
+			ret.client.Disconnect(context.Background()),
 		).Error("failed to disconnect mongo session")
 		return nil, err
 	}
@@ -46,11 +51,11 @@ func Dial(cfg ...*Config) (IClient, error) {
 	// If overrides are allowed and another connection with the same name existed, closes that connection.
 	if current != nil {
 		logx.WithObj(
-			current.Disconnect(context.Background()),
+			current.Client().Disconnect(context.Background()),
 		).Error("failed to disconnect existing mongo session")
 	}
 
-	return client, nil
+	return ret, nil
 }
 
 // Get attempts to retrieve an open connection by the given name. Returns nil if no connection by the given
@@ -65,4 +70,22 @@ func Get(name ...string) IClient {
 		return beans.Resolve(ref, n).(IClient)
 	}
 	return nil
+}
+
+type mgoClient struct {
+	client *mongo.Client
+	dbName string
+}
+
+func (c *mgoClient) Client() *mongo.Client {
+	return c.client
+}
+
+func (c *mgoClient) DB(name ...string) (mongo.Session, *mongo.Database, error) {
+	session, err := c.client.StartSession()
+	if err != nil {
+		return nil, nil, err
+	}
+	dbName := stringx.GetOrDefault(c.dbName, name...)
+	return session, session.Client().Database(dbName), nil
 }

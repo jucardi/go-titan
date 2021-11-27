@@ -67,6 +67,13 @@ func (c *Config) opts() *options.ClientOptions {
 	return ret
 }
 
+func (c *Config) dbName() string {
+	if c.Database != "" {
+		return c.Database
+	}
+	return "db"
+}
+
 const (
 	configKey  = "mongo"
 	configName = "mongo-cfg"
