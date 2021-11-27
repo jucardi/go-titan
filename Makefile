@@ -21,8 +21,8 @@ protoc:
 	@go get github.com/golang/protobuf/protoc-gen-go
 	@GO111MODULE=off go get github.com/jucardi/protoc-go-inject-tag
 	@GO111MODULE=off go install github.com/jucardi/protoc-go-inject-tag
-	@protoc -I=$(PWD)/proto --go_out=$(PWD)/errorx $(PWD)/proto/error.proto
-	@protoc-go-inject-tag --input "$(PWD)/errorx/*.pb.go" --cleanup -x yaml -x gorm -x bson
+	@protoc -I=$(PWD)/net/errorx --go_out=$(PWD)/net/errorx $(PWD)/net/errorx/error.proto
+	@protoc-go-inject-tag --input "$(PWD)/net/errorx/*.pb.go" --cleanup -x yaml -x gorm -x bson
 
 deps: protoc
 	@echo "installing dependencies..."
