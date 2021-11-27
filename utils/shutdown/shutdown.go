@@ -9,11 +9,6 @@ import (
 
 type Hook func() error
 
-type ILogger interface {
-	Info(args ...interface{})
-	Warn(args ...interface{})
-}
-
 type hookInfo struct {
 	name string
 	fn   Hook
@@ -21,12 +16,7 @@ type hookInfo struct {
 
 var (
 	hooks []*hookInfo
-	log   ILogger
 )
-
-func SetLogger(l ILogger) {
-	log = l
-}
 
 // ListenForSignals for a TERM or INT signal.  Once the signal is caught all shutdown hooks will be
 // executed allowing a graceful shutdown
@@ -37,7 +27,7 @@ func ListenForSignals() {
 	go func() {
 		sig := <-quit
 
-		log.Info("signal captured: ", sig.String())
+		log().Info("signal captured: ", sig.String())
 		InvokeHooks()
 		os.Exit(0)
 	}()
@@ -66,12 +56,12 @@ func InvokeHooks() {
 
 	for _, hook := range hooks {
 		if hook.name != "" {
-			log.Info("Executing hook: ", hook.name)
+			log().Info("Executing hook: ", hook.name)
 		}
 		go func(hook *hookInfo) {
 			defer wg.Done()
 			if err := hook.fn(); err != nil {
-				log.Warn("Shutdown hook exited with errors, ", err.Error())
+				log().Warn("Shutdown hook exited with errors, ", err.Error())
 			}
 		}(hook)
 	}

@@ -72,7 +72,7 @@ func (e Encoders) Auto(c *Context, code int, obj interface{}) error {
 		return errors.New("unable to determine encoder based on the request Content-Type header: ", contentType)
 	}
 
-	return errors.New("failed to determine auto encodingo")
+	return errors.New("failed to determine auto encoding")
 }
 
 func (Encoders) Json(c *Context, code int, obj interface{}) (_ error) {
