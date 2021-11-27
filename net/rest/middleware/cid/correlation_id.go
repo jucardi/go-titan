@@ -2,12 +2,12 @@ package cid
 
 import (
 	"fmt"
-	"github.com/jucardi/go-titan/net/rest"
 	"net/http"
 	"os"
 	"strings"
 
 	"github.com/google/uuid"
+	"github.com/jucardi/go-titan/net/rest"
 )
 
 const (

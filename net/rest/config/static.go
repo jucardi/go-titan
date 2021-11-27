@@ -1,37 +1,43 @@
 package config
 
-var (
-	singleton = newConfig()
-	callbacks []func(config *RestConfig)
+import (
+	"github.com/jucardi/go-titan/configx"
+	"github.com/jucardi/go-titan/logx"
 )
 
+const (
+	configKey  = "rest"
+	configName = "rest-cfg"
+)
+
+var (
+	singleton = defaultConfig()
+)
+
+func init() {
+	configx.AddOnReloadCallback(func(cfg configx.IConfig) {
+		config := defaultConfig()
+
+		logx.WithObj(
+			cfg.MapToObj(configKey, config),
+		).Fatal("unable to map service configuration")
+
+		singleton = config
+	}, configName)
+}
+
+// Rest returns rest configuration
 func Rest() *RestConfig {
-	if singleton == nil {
-		singleton = newConfig()
-		triggerCallbacks(singleton)
-	}
 	return singleton
 }
 
-func Set(cfg *RestConfig) {
-	if cfg == nil {
-		return
-	}
-	singleton = cfg
-	triggerCallbacks(singleton)
-}
-
 func AddReloadCallback(callback func(config *RestConfig)) {
-	callbacks = append(callbacks, callback)
+	configx.AddOnReloadCallback(func(_ configx.IConfig) {
+		callback(Rest())
+	})
 }
 
-func triggerCallbacks(config *RestConfig) {
-	for _, callback := range callbacks {
-		callback(config)
-	}
-}
-
-func newConfig() *RestConfig {
+func defaultConfig() *RestConfig {
 	return &RestConfig{
 		HttpPort:    8080,
 		AdminPort:   15000,

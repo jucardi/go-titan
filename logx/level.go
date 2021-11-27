@@ -1,9 +1,10 @@
 package logx
 
 import (
-	"github.com/jucardi/go-strings/stringx"
 	"math/bits"
 	"strings"
+
+	"github.com/jucardi/go-strings/stringx"
 )
 
 // These are the different logging levels.

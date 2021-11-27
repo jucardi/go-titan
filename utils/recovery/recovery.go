@@ -1,8 +1,9 @@
 package recovery
 
 import (
-	"github.com/jucardi/go-titan/logx"
 	"runtime"
+
+	"github.com/jucardi/go-titan/logx"
 )
 
 const StackTraceSize = 4096

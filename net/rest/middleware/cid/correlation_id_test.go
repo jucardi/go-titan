@@ -1,7 +1,6 @@
 package cid
 
 import (
-	"github.com/jucardi/go-titan/net/rest"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -9,6 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jucardi/go-testx/assert"
+	"github.com/jucardi/go-titan/net/rest"
 )
 
 const (

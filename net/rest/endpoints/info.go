@@ -2,12 +2,12 @@ package endpoints
 
 import (
 	"fmt"
-	"github.com/jucardi/go-streams/streams"
-	"github.com/jucardi/go-titan/info"
-	"github.com/jucardi/go-titan/utils/paths"
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jucardi/go-streams/streams"
+	"github.com/jucardi/go-titan/info"
+	"github.com/jucardi/go-titan/utils/paths"
 )
 
 var global = NewInfoHandler()

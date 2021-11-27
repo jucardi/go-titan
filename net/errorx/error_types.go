@@ -5,9 +5,10 @@ package errorx
 
 import (
 	"fmt"
-	"github.com/jucardi/go-streams/streams"
 	"net/http"
 	"strings"
+
+	"github.com/jucardi/go-streams/streams"
 )
 
 var (

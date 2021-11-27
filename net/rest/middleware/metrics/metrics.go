@@ -1,10 +1,11 @@
 package metrics
 
 import (
-	"github.com/jucardi/go-titan/net/rest"
-	"github.com/jucardi/go-titan/utils/metrics"
 	"sync"
 	"time"
+
+	"github.com/jucardi/go-titan/net/rest"
+	"github.com/jucardi/go-titan/utils/metrics"
 )
 
 const (

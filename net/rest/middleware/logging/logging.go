@@ -2,13 +2,14 @@ package logging
 
 import (
 	"fmt"
+	"net/http"
+
 	"github.com/jucardi/go-titan/errors"
 	"github.com/jucardi/go-titan/logx"
 	"github.com/jucardi/go-titan/net/errorx"
 	"github.com/jucardi/go-titan/net/rest"
 	"github.com/jucardi/go-titan/net/rest/config"
 	"github.com/jucardi/go-titan/net/rest/middleware/metrics"
-	"net/http"
 )
 
 var (

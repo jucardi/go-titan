@@ -32,6 +32,9 @@ type RestConfig struct {
 
 	// RequestLimitSize is the max byte size allowed in the request body. Zero means no limit. Default is 5Mib
 	RequestLimitSize int64 `json:"request_limit_size" yaml:"request_limit_size" default:"5242880"`
+
+	// Verbose enables verbose mode to the Gin router
+	Verbose bool `json:"verbose" yaml:"verbose"`
 }
 
 type ResponseConfig struct {

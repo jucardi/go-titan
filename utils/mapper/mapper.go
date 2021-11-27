@@ -3,12 +3,12 @@ package mapper
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/jucardi/go-titan/errors"
-	"github.com/jucardi/go-titan/utils/maps"
-	"github.com/jucardi/go-titan/utils/reflectx"
 	"reflect"
 	"strings"
 
+	"github.com/jucardi/go-titan/errors"
+	"github.com/jucardi/go-titan/utils/maps"
+	"github.com/jucardi/go-titan/utils/reflectx"
 	"gopkg.in/yaml.v2"
 )
 

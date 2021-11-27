@@ -1,8 +1,9 @@
 package reflectx
 
 import (
-	"github.com/jucardi/go-streams/streams"
 	"reflect"
+
+	"github.com/jucardi/go-streams/streams"
 )
 
 var defaultValuesLoader IValuesLoader

@@ -3,14 +3,14 @@ package router
 import (
 	"errors"
 	"fmt"
-	"github.com/jucardi/go-titan/logx"
-	"github.com/jucardi/go-titan/net/rest/config"
-	"github.com/jucardi/go-titan/net/rest/endpoints"
-	"github.com/jucardi/go-titan/utils/paths"
 	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jucardi/go-titan/logx"
+	"github.com/jucardi/go-titan/net/rest/config"
+	"github.com/jucardi/go-titan/net/rest/endpoints"
+	"github.com/jucardi/go-titan/utils/paths"
 )
 
 type IEngine interface {
@@ -56,13 +56,14 @@ func newLog() *ginLogger {
 }
 
 func init() {
-	l := newLog()
-	gin.DefaultWriter = l
-	gin.SetMode(gin.ReleaseMode)
+	onReloadConfig(config.Rest())
+	config.AddReloadCallback(onReloadConfig)
 }
 
-func SetVerbose(verbose bool) {
-	if verbose {
+func onReloadConfig(cfg *config.RestConfig) {
+	l := newLog()
+	gin.DefaultWriter = l
+	if cfg.Verbose {
 		gin.SetMode(gin.DebugMode)
 	} else {
 		gin.SetMode(gin.ReleaseMode)
@@ -75,9 +76,15 @@ func Bare(contextPath ...string) IEngine {
 }
 
 // BareFromConfig creates a new engine with the provided configuration and no middlewares
-func BareFromConfig(config *config.RestConfig) IEngine {
-	ret := bare(config.ContextPath)
-	ret.config = *config
+func BareFromConfig(cfg ...*config.RestConfig) IEngine {
+	var c *config.RestConfig
+	if len(cfg) > 0 && cfg[0] != nil {
+		c = cfg[0]
+	} else {
+		c = config.Rest()
+	}
+	ret := bare(c.ContextPath)
+	ret.config = *c
 	return ret
 }
 
@@ -90,8 +97,8 @@ func New(contextPath ...string) IEngine {
 
 // FromConfig creates a new Gin engine using the provided configuration and applies the common middleware:
 // Recovery, Logging, Metrics, Headers, Cid
-func FromConfig(config *config.RestConfig) IEngine {
-	router := BareFromConfig(config)
+func FromConfig(cfg ...*config.RestConfig) IEngine {
+	router := BareFromConfig(cfg...)
 	UseCommonMiddleware(router)
 	return router
 }

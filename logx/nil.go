@@ -1,3 +1,3 @@
 package logx
 
-type nilEntry struct {}
+type nilEntry struct{}

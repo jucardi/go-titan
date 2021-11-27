@@ -3,13 +3,14 @@ package errorx
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
+	"strings"
+	"time"
+
 	"github.com/jucardi/go-strings/stringx"
 	"github.com/jucardi/go-titan/errors"
 	"github.com/jucardi/go-titan/runtime"
 	"github.com/jucardi/go-titan/utils/reflectx"
-	"net/http"
-	"strings"
-	"time"
 )
 
 // StatusText returns a text for the HTTP status code.

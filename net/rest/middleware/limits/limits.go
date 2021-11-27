@@ -2,12 +2,13 @@ package limits
 
 import (
 	"fmt"
+	"io"
+	"net/http"
+
 	"github.com/jucardi/go-titan/logx"
 	"github.com/jucardi/go-titan/net/errorx"
 	"github.com/jucardi/go-titan/net/rest"
 	"github.com/jucardi/go-titan/net/rest/config"
-	"io"
-	"net/http"
 )
 
 var maxSize int64 = 0

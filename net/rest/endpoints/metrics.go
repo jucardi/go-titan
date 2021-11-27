@@ -2,10 +2,10 @@ package endpoints
 
 import (
 	"expvar"
-	"github.com/jucardi/go-titan/net/rest/middleware/metrics"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jucardi/go-titan/net/rest/middleware/metrics"
 )
 
 // AddLogLevel adds the `/metrics` endpoint to the given router.

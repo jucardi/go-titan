@@ -1,13 +1,13 @@
 package paths
 
 import (
-	"github.com/jucardi/go-titan/logx"
-	"github.com/jucardi/go-titan/utils/shutdown"
 	"os"
 	"path"
 	"strings"
 
 	"github.com/google/uuid"
+	"github.com/jucardi/go-titan/logx"
+	"github.com/jucardi/go-titan/utils/shutdown"
 )
 
 var created []string

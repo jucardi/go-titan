@@ -5,8 +5,8 @@ import (
 	"reflect"
 	"unicode"
 
-	"github.com/jucardi/go-titan/errors"
 	"github.com/jucardi/go-streams/streams"
+	"github.com/jucardi/go-titan/errors"
 )
 
 const (

@@ -1,10 +1,10 @@
 package router
 
 import (
-	"github.com/jucardi/go-titan/net/rest"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jucardi/go-titan/net/rest"
 )
 
 type IRoutes interface {

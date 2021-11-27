@@ -3,13 +3,13 @@ package maps
 import (
 	"encoding/json"
 	"fmt"
-	"gopkg.in/yaml.v2"
 	"reflect"
 	"testing"
 
+	"github.com/imdario/mergo"
 	"github.com/jucardi/go-testx/assert"
 	. "github.com/jucardi/go-testx/testx"
-	"github.com/imdario/mergo"
+	"gopkg.in/yaml.v2"
 )
 
 var mockString = `{
@@ -226,6 +226,7 @@ three:
   }
 }`
 )
+
 func TestYamlMerge(t *testing.T) {
 	target1 := map[string]interface{}{}
 	target2 := map[string]interface{}{}

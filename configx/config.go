@@ -2,12 +2,12 @@ package configx
 
 import (
 	"fmt"
-	"github.com/jucardi/go-titan/utils/mapper"
-	"github.com/jucardi/go-titan/utils/reflectx"
 	"sync"
 
 	"github.com/jucardi/go-strings/stringx"
+	"github.com/jucardi/go-titan/utils/mapper"
 	"github.com/jucardi/go-titan/utils/maps"
+	"github.com/jucardi/go-titan/utils/reflectx"
 )
 
 const (

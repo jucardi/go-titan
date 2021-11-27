@@ -2,16 +2,17 @@ package rest
 
 import (
 	"bytes"
+	"io/ioutil"
+	"net/http"
+	"net/http/httputil"
+	"reflect"
+
 	"github.com/gin-gonic/gin"
 	"github.com/jucardi/go-streams/streams"
 	"github.com/jucardi/go-titan/logx"
 	"github.com/jucardi/go-titan/net/errorx"
 	"github.com/jucardi/go-titan/net/rest/config"
 	"github.com/jucardi/go-titan/utils/reflectx"
-	"io/ioutil"
-	"net/http"
-	"net/http/httputil"
-	"reflect"
 )
 
 // Context is a `gin.Context` wrapper that allows extending context functionality.

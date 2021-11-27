@@ -1,11 +1,12 @@
 package endpoints
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/jucardi/go-titan/logx"
 	"github.com/jucardi/go-titan/net/errorx"
 	"github.com/jucardi/go-titan/net/rest"
-	"net/http"
 )
 
 // AddLogLevel adds the `/logger/:level` endpoint to the given router.
