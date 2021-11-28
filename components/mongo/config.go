@@ -57,7 +57,8 @@ func (c *Config) opts() *options.ClientOptions {
 		creds = fmt.Sprintf("%s:%s@", c.Username, c.Password)
 	}
 
-	url := fmt.Sprintf("mongodb+srv://%s%s/%s%s", creds, c.Host, c.Database, c.Options)
+	url := fmt.Sprintf("mongodb://%s%s:%d/%s%s", creds, c.Host, c.Port, c.Database, c.Options)
+	logx.Debug("mongodb connection string: ", url)
 	ret := options.Client().ApplyURI(url)
 
 	// TODO: Handler auth outside of the URL
