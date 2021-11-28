@@ -1,6 +1,8 @@
 package mongo
 
 import (
+	"fmt"
+
 	"github.com/jucardi/go-titan/configx"
 	"github.com/jucardi/go-titan/logx"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -50,19 +52,15 @@ type Config struct {
 }
 
 func (c *Config) opts() *options.ClientOptions {
-	ret := options.Client().ApplyURI(c.Host)
-	if (c.AuthDB != "" || c.Username != "" || c.Password != "") && ret.Auth == nil {
-		ret.Auth = &options.Credential{}
+	creds := ""
+	if c.Username != "" && c.Password != "" {
+		creds = fmt.Sprintf("%s:%s@", c.Username, c.Password)
 	}
-	if c.Username != "" {
-		ret.Auth.Username = c.Username
-	}
-	if c.Password != "" {
-		ret.Auth.Password = c.Password
-	}
-	if c.AuthDB != "" {
-		ret.Auth.AuthSource = c.AuthDB
-	}
+
+	url := fmt.Sprintf("mongodb+srv://%s%s/%s%s", creds, c.Host, c.Database, c.Options)
+	ret := options.Client().ApplyURI(url)
+
+	// TODO: Handler auth outside of the URL
 	// TODO: Add TLS integration
 	return ret
 }
