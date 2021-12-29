@@ -11,7 +11,7 @@ type Encoding string
 
 type RestConfig struct {
 	// Port indicates the port where an API should be listening to
-	HttpPort int `json:"http_port" yaml:"http_port" env:"TITAN_REST_HTTP_PORT"`
+	HttpPort int `json:"http_port" yaml:"http_port" env:"TITAN_REST_HTTP_PORT" default:"8080"`
 
 	// AdminPort is the port where the admin routes will be registered to.
 	//  - If not set (0), the HttpPort will be used instead.
@@ -41,12 +41,12 @@ type ResponseConfig struct {
 	// Encoding indicates the responses will be encoded in controllers. If using the provided context functions
 	// Send, SendOrErr, StatusOrErr, SendError, this will determine how the message will be encoded.
 	// Does not apply for specific encoding functions such as Json, Protobuf, YAML, XML, etc
-	Encoding Encoding `json:"mode" yaml:"mode" default:"auto"`
+	Encoding Encoding `json:"encoding" yaml:"encoding" default:"auto"`
 
 	// FallbackEncoding takes place if the default encoding fails to encode a message. Useful when using
 	// `auto` which attempts to encode the response based on the incoming request Content-Type header, if
 	// not provided the fallback mode will take place
-	FallbackEncoding Encoding `json:"fallback_mode,omitempty" yaml:"fallback_mode,omitempty" default:"json"`
+	FallbackEncoding Encoding `json:"fallback,omitempty" yaml:"fallback,omitempty" default:"json"`
 
 	// ErrorBodies indicates whether serializing errors and writing them to the response bodies should be enabled
 	ErrorBodies bool `json:"error_bodies" yaml:"error_bodies" default:"true"`

@@ -16,7 +16,7 @@ var (
 
 func init() {
 	configx.AddOnReloadCallback(func(cfg configx.IConfig) {
-		config := defaultConfig()
+		config := &RestConfig{}
 
 		logx.WithObj(
 			cfg.MapToObj(configKey, config),
