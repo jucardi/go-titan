@@ -7,7 +7,8 @@ import (
 )
 
 const (
-	RemoteEnvVariable = "CONFIG_REMOTE_URL"
+	RemoteEnvVariable = "TITAN_CONFIG_REMOTE_URL"
+	FileEnvVariable   = "TITAN_CONFIG_FILE"
 	defaultSearchPath = "fixtures/config.yml"
 	remoteFlag        = "remote"
 	configFlag        = "config"
@@ -31,6 +32,9 @@ func FromCommand(cmd *cobra.Command) error {
 		return FromRemote(remote)
 	}
 
+	if cfgPath := os.Getenv(FileEnvVariable); cfgPath != "" {
+		filepath = cfgPath
+	}
 	log().Info("Loading config from file")
 	return FromFile(filepath)
 }
