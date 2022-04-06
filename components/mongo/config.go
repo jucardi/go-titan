@@ -2,6 +2,8 @@ package mongo
 
 import (
 	"fmt"
+	"net/url"
+	"strings"
 
 	"github.com/jucardi/go-titan/configx"
 	"github.com/jucardi/go-titan/logx"
@@ -27,7 +29,7 @@ type Config struct {
 	AuthDB string `json:"auth_db" yaml:"auth_db"`
 
 	// Options is any additional options to be added to the connection string
-	Options string `json:"options,omitempty" yaml:"options,omitempty"`
+	Options []string `json:"options,omitempty" yaml:"options,omitempty"`
 
 	// Username is the username to authenticate to the database
 	Username string `json:"username" yaml:"username"`
@@ -54,12 +56,13 @@ type Config struct {
 func (c *Config) opts() *options.ClientOptions {
 	creds := ""
 	if c.Username != "" && c.Password != "" {
-		creds = fmt.Sprintf("%s:%s@", c.Username, c.Password)
+		creds = fmt.Sprintf("%s:%s@", url.QueryEscape(c.Username), url.QueryEscape(c.Password))
 	}
 
-	url := fmt.Sprintf("mongodb://%s%s:%d/%s%s", creds, c.Host, c.Port, c.Database, c.Options)
-	logx.Debug("mongodb connection string: ", url)
-	ret := options.Client().ApplyURI(url)
+	u := fmt.Sprintf("mongodb://%s%s:%d/%s%s", creds, c.Host, c.Port, c.Database, c.options())
+
+	logx.Debug("mongodb connection string: ", u)
+	ret := options.Client().ApplyURI(u)
 
 	// TODO: Handler auth outside of the URL
 	// TODO: Add TLS integration
@@ -71,6 +74,21 @@ func (c *Config) dbName() string {
 		return c.Database
 	}
 	return "db"
+}
+
+func (c *Config) options() string {
+	var opts []string
+	if c.AuthDB != "" {
+		opts = append(opts, "authSource="+c.AuthDB)
+	}
+	if c.TlsCertLocation == "" {
+		opts = append(opts, "ssl=false")
+	}
+	opts = append(opts, c.Options...)
+	if len(opts) == 0 {
+		return ""
+	}
+	return "?" + strings.Join(opts, "&")
 }
 
 const (
