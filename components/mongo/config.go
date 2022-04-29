@@ -16,26 +16,26 @@ type Config struct {
 	Name string `json:"name,omitempty" yaml:"name,omitempty"`
 
 	// Host is the hostname where the database is located
-	Host string `json:"host" yaml:"host"`
+	Host string `json:"host" yaml:"host" env:"MONGO_HOST"`
 
 	// Port is the port where the database is listening to connections
-	Port int `json:"port" yaml:"port"`
+	Port int `json:"port" yaml:"port" env:"MONGO_PORT"`
 
 	// Database indicates the database name to connect to, where operations will be executed on
-	Database string `json:"database" yaml:"database"`
+	Database string `json:"database" yaml:"database" env:"MONGO_DBNAME"`
 
 	// AuthDB indicates the authentication database to use. If empty, the client will attempt to authenticate using the
 	// 'Database' value instead
-	AuthDB string `json:"auth_db" yaml:"auth_db"`
+	AuthDB string `json:"auth_db" yaml:"auth_db" env:"MONGO_DBAUTH"`
 
 	// Options is any additional options to be added to the connection string
 	Options []string `json:"options,omitempty" yaml:"options,omitempty"`
 
 	// Username is the username to authenticate to the database
-	Username string `json:"username" yaml:"username"`
+	Username string `json:"username" yaml:"username" env:"MONGO_USERNAME"`
 
 	// Password is the password to authenticate to the database
-	Password string `json:"password" yaml:"password"`
+	Password string `json:"password" yaml:"password" env:"MONGO_PASSWORD"`
 
 	// DialMaxRetries defines the maximum amount of retries to attempt when dialing to a db
 	DialMaxRetries *int `json:"dial_max_retries" yaml:"dial_max_retries"`
