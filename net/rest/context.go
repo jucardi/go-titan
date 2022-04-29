@@ -54,20 +54,23 @@ func (c *Context) Copy() *Context {
 	}
 }
 
-func (c *Context) Abort() {
+func (c *Context) Abort() *Context {
 	c.aborted = true
 	c.Context.Abort()
+	return c
 }
 
-func (c *Context) AbortWithCode(code int) {
+func (c *Context) AbortWithCode(code int) *Context {
 	c.aborted = true
 	c.Context.AbortWithStatus(code)
+	return c
 }
 
-func (c *Context) AbortWithError(code int, err error) {
+func (c *Context) AbortWithError(code int, err error) *Context {
 	c.Status(code)
 	c.SendError(err)
 	c.Abort()
+	return c
 }
 
 // Send marshals the provided `obj` as the response and assigns the provided `code` and the HTTP response code.
