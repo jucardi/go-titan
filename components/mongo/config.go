@@ -97,22 +97,27 @@ const (
 )
 
 var (
-	singleton = &Config{}
+	singleton *Config
 )
 
 func init() {
-	configx.AddOnReloadCallback(func(cfg configx.IConfig) {
-		config := &Config{}
-
-		logx.WithObj(
-			cfg.MapToObj(configKey, config),
-		).Fatal("unable to map service configuration")
-
-		singleton = config
-	}, configName)
+	configx.AddOnReloadCallback(reloadCallback, configName)
 }
 
 // Rest returns rest configuration
 func getConfig() *Config {
+	if singleton == nil {
+		reloadCallback(configx.Get())
+	}
 	return singleton
+}
+
+func reloadCallback(cfg configx.IConfig) {
+	config := &Config{}
+
+	logx.WithObj(
+		cfg.MapToObj(configKey, config),
+	).Fatal("unable to map service configuration")
+
+	singleton = config
 }
