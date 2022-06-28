@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io"
 	"io/ioutil"
+	"os"
 	"path"
 	"strings"
 
@@ -45,7 +46,29 @@ func DefaultTestConfigPath() string {
 // For example, if the argument of "test_assets/somefile.json" is specified the result
 // returned would be the [ Project Root Absolute Path ] + test_assets/somefile.json
 func AbsolutePath(file string) string {
-	return paths.Combine(osx.ProjectRoot(), file)
+	root := osx.ProjectRoot()
+	if root != "" {
+		return paths.Combine(osx.ProjectRoot(), file)
+	}
+	currentPath := os.Getenv("PWD")
+	split := strings.Split(currentPath, "/")
+	for i := 0; i < len(split); i++ {
+		current := strings.Join(split[:len(split)-i], "/")
+		if isRoot(current) {
+			return paths.Combine(current, file)
+		}
+	}
+	return file
+}
+
+func isRoot(path string) bool {
+	if exists, _ := paths.Exists(paths.Combine(path, "README.md")); exists {
+		return true
+	}
+	if exists, _ := paths.Exists(paths.Combine(path, "go.mod")); exists {
+		return true
+	}
+	return false
 }
 
 // FileToReader loads JSON assets to a reader for tests with request bodies.
