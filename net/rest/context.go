@@ -33,6 +33,11 @@ func NewContext(ctx *gin.Context, rewindable bool) *Context {
 }
 
 func (c *Context) init() {
+
+	if c.Request.Body == nil {
+		return
+	}
+
 	c.reqBody, _ = ioutil.ReadAll(c.Request.Body)
 	c.RewindBody()
 }
