@@ -46,9 +46,12 @@ func DefaultTestConfigPath() string {
 // For example, if the argument of "test_assets/somefile.json" is specified the result
 // returned would be the [ Project Root Absolute Path ] + test_assets/somefile.json
 func AbsolutePath(file string) string {
-	root := osx.ProjectRoot()
+	root, err := osx.ProjectRoot()
+	if err != nil {
+		panic(err)
+	}
 	if root != "" {
-		return paths.Combine(osx.ProjectRoot(), file)
+		return paths.Combine(root, file)
 	}
 	currentPath := os.Getenv("PWD")
 	split := strings.Split(currentPath, "/")

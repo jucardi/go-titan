@@ -4,6 +4,7 @@ import "reflect"
 
 type IMock interface {
 	When(method string, condition func(args ...interface{}) bool, rets []interface{})
+	WhenDelayedRets(method string, condition func(args ...interface{}) bool, retProvider func() []interface{})
 	Times(method string) int
 	Invoke(method string, args ...interface{}) (ret []interface{})
 	ClearWhen()
@@ -18,8 +19,9 @@ type MockBase struct {
 }
 
 type conditionSet struct {
-	match func(args ...interface{}) bool
-	rets  []interface{}
+	match    func(args ...interface{}) bool
+	rets     []interface{}
+	provider func() []interface{}
 }
 
 func (m *MockBase) Init(interfaceRef interface{}) *MockBase {
@@ -55,6 +57,16 @@ func (m *MockBase) When(method string, condition func(args ...interface{}) bool,
 	})
 }
 
+func (m *MockBase) WhenDelayedRets(method string, condition func(args ...interface{}) bool, retProvider func() []interface{}) {
+	if _, ok := m.conditions[method]; !ok {
+		m.conditions[method] = []*conditionSet{}
+	}
+	m.conditions[method] = append(m.conditions[method], &conditionSet{
+		match:    condition,
+		provider: retProvider,
+	})
+}
+
 func (m *MockBase) Times(method string) int {
 	if t, ok := m.times[method]; ok {
 		return t
@@ -80,6 +92,9 @@ func (m *MockBase) Invoke(method string, args ...interface{}) (ret []interface{}
 	if set, ok := m.conditions[method]; ok {
 		for _, c := range set {
 			if c.match(args...) {
+				if c.provider != nil {
+					return c.provider()
+				}
 				return c.rets
 			}
 		}

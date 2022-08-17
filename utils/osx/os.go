@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 
+	"github.com/jucardi/go-titan/errors"
 	"github.com/jucardi/go-titan/utils/paths"
 )
 
@@ -65,9 +67,9 @@ func CopyFile(src, dst string, overwrite bool, perm ...os.FileMode) error {
 }
 
 // ProjectRoot is the root directory of the calling project
-func ProjectRoot() string {
+func ProjectRoot() (string, error) {
 	if projectRoot != "" {
-		return projectRoot
+		return projectRoot, nil
 	}
 
 	workdir, err := os.Getwd()
@@ -75,16 +77,15 @@ func ProjectRoot() string {
 		workdir = os.Getenv("PWD")
 	}
 
-	if strings.Contains(workdir, ":\\") {
-		workdir = strings.Replace(workdir, "\\", "/", -1)
+	gopath := os.Getenv("GOPATH")
+
+	if strings.Contains(workdir, gopath) {
+		projectRoot = projectRootInGopath(gopath, workdir)
+	} else {
+		projectRoot, err = projectRootByModFile(workdir)
 	}
 
-	srcMatch := projectRootRE.FindStringSubmatch(workdir)
-	if len(srcMatch) > 0 {
-		projectRoot = paths.Combine(os.Getenv("GOPATH"), srcMatch[1])
-	}
-
-	return projectRoot
+	return projectRoot, err
 }
 
 // NewFileWriter creates a new instance of a file writer
@@ -94,4 +95,45 @@ func NewFileWriter(filename string) (io.WriteCloser, error) {
 		return nil, err
 	}
 	return &fileWriter{filename: filename, file: f}, nil
+}
+
+func projectRootInGopath(gopath, workdir string) (ret string) {
+	isWindowsPath := strings.Contains(workdir, ":\\")
+	if isWindowsPath {
+		workdir = strings.Replace(workdir, "\\", "/", -1)
+	}
+
+	srcMatch := projectRootRE.FindStringSubmatch(workdir)
+	if len(srcMatch) > 0 {
+		ret = paths.Combine(gopath, srcMatch[1])
+	}
+	if isWindowsPath {
+		ret = strings.Replace(projectRoot, "/", "\\", -1)
+	}
+	return
+}
+
+func projectRootByModFile(workdir string) (string, error) {
+	const modFilename = "go.mod"
+	var (
+		exists     bool
+		err        error
+		currentDir = workdir
+	)
+
+	for !exists {
+		modFile := paths.Combine(currentDir, modFilename)
+		exists, err = paths.Exists(modFile)
+		if err != nil {
+			return "", errors.Format("failed to determine if file '%s' exists  >  %v", modFile, err)
+		}
+		if exists {
+			return currentDir, nil
+		}
+		currentDir, _ = filepath.Split(currentDir)
+		if currentDir == "" || currentDir == "/" || strings.HasSuffix(currentDir, ":\\") {
+			return "", errors.Format("failed to find project root from '%s'", workdir)
+		}
+	}
+	return "", nil
 }
