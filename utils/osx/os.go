@@ -119,6 +119,7 @@ func projectRootByModFile(workdir string) (string, error) {
 		exists     bool
 		err        error
 		currentDir = workdir
+		lastLen    = len(workdir)
 	)
 
 	for !exists {
@@ -130,7 +131,15 @@ func projectRootByModFile(workdir string) (string, error) {
 		if exists {
 			return currentDir, nil
 		}
+		if strings.HasSuffix(currentDir, "/") || strings.HasSuffix(currentDir, "\\") {
+			currentDir = currentDir[:len(currentDir)-1]
+		}
 		currentDir, _ = filepath.Split(currentDir)
+		if lastLen == len(currentDir) {
+			return "", errors.Format("aborted trying to find project root for '%s' to prevent stack overflow", workdir)
+		}
+		lastLen = len(currentDir)
+
 		if currentDir == "" || currentDir == "/" || strings.HasSuffix(currentDir, ":\\") {
 			return "", errors.Format("failed to find project root from '%s'", workdir)
 		}
