@@ -9,15 +9,22 @@ import (
 	"github.com/jucardi/go-titan/logx"
 )
 
-func MigrateMongo(cfg *Config) {
-	if cfg == nil || cfg.MigrationSource == "" {
+func Migrate(cfg ...*Config) {
+	var c *Config
+	if len(cfg) > 0 && cfg[0] != nil {
+		c = cfg[0]
+	} else {
+		c = getConfig()
+	}
+
+	if c == nil || c.MigrationSource == "" {
 		return
 	}
-	migrator, err := migrate.New(cfg.MigrationSource, cfg.url())
+	migrator, err := migrate.New(c.MigrationSource, c.url())
 
 	logx.WithObj(err).Fatal("Could not initialize migrator")
 
-	logx.Info(fmt.Sprintf("Applying migrations from source %s", cfg.MigrationSource))
+	logx.Info(fmt.Sprintf("Applying migrations from source %s", c.MigrationSource))
 
 	migErr := migrator.Up()
 
