@@ -51,6 +51,9 @@ type Config struct {
 	// If TlsSkipVerifyHost is true, TLS accepts any certificate  presented by the server and any host name in that
 	// certificate.  In this mode, TLS is susceptible to man-in-the-middle attacks. This should be used only for testing.
 	TlsSkipVerifyHost bool `json:"tls_skip_verify_host" yaml:"tls_skip_verify_host"`
+
+	// MigrationSource indicates the source where migration scripts are located
+	MigrationSource string `json:"migration_source" yaml:"migration_source"`
 }
 
 func (c *Config) opts() *options.ClientOptions {
@@ -67,6 +70,15 @@ func (c *Config) opts() *options.ClientOptions {
 	// TODO: Handler auth outside of the URL
 	// TODO: Add TLS integration
 	return ret
+}
+
+func (c *Config) url() string {
+	auth := ""
+	if c.Username != "" && c.Password != "" {
+		auth = fmt.Sprintf("%s:%s@", c.Username, c.Password)
+	}
+
+	return fmt.Sprintf("mongodb://%s%s:%d/%s%s", auth, c.Host, c.Port, c.Database, c.options())
 }
 
 func (c *Config) dbName() string {
