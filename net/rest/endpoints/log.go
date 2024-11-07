@@ -21,10 +21,11 @@ func AddLogLevel(router *gin.Engine) {
 
 // swagger:route POST /loggers/:level update loggers level
 //
-// Updates the log level of the service
+// # Updates the log level of the service
 //
 // Responses:
-//   200: Confirmation message
+//
+//	200: Confirmation message
 func updateLoggersLevel(c *rest.Context) {
 	level := c.Param("level")
 	if level == "" {
@@ -45,10 +46,11 @@ func updateLoggersLevel(c *rest.Context) {
 
 // swagger:route POST /logger/:name/:level update logger level
 //
-// Updates the log level of a specific logger within the service
+// # Updates the log level of a specific logger within the service
 //
 // Responses:
-//   200: Confirmation message
+//
+//	200: Confirmation message
 func updateLoggerLevel(c *rest.Context) {
 	level, name := c.Param("level"), c.Param("name")
 	if level == "" || name == "" {
