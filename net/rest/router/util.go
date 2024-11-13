@@ -10,6 +10,7 @@ import (
 	"github.com/jucardi/go-titan/net/rest/middleware/limits"
 	"github.com/jucardi/go-titan/net/rest/middleware/logging"
 	"github.com/jucardi/go-titan/net/rest/middleware/metrics"
+	"github.com/jucardi/go-titan/net/rest/middleware/prometheus"
 	"github.com/jucardi/go-titan/net/rest/middleware/recovery"
 )
 
@@ -27,6 +28,7 @@ func UseCommonMiddleware(router IRouter) {
 		recovery.Handler,
 		headers.Handler,
 		cid.Handler,
+		prometheus.Handler,
 	)
 }
 
