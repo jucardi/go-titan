@@ -1,4 +1,4 @@
-FROM golang:1.17
+FROM golang:1.22
 
 RUN apt-get update && \
     apt-get upgrade -y && \
@@ -11,7 +11,7 @@ RUN curl -OL https://github.com/google/protobuf/releases/download/v3.6.1/protoc-
     rm protoc-3.6.1-linux-x86_64.zip && \
     rm -rf protoc3
 
-RUN go get github.com/golang/protobuf/protoc-gen-go && \
-    go get github.com/jucardi/protoc-go-inject-tag && \
-    go get golang.org/x/tools/cmd/goimports && \
-    go get github.com/jucardi/goimports-blank-rm
+RUN go install github.com/golang/protobuf/protoc-gen-go@latest && \
+    go install github.com/jucardi/protoc-go-inject-tag@latest && \
+    go install golang.org/x/tools/cmd/goimports@latest && \
+    go install github.com/jucardi/goimports-blank-rm@latest
