@@ -2,7 +2,6 @@ package prometheus
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"sync"
 
@@ -77,7 +76,6 @@ func addDefaultLabels(labels map[string]string, c *PrometheusClient) map[string]
 }
 
 func (c *PrometheusClient) SetGaugeValue(metricName GaugeMetricName, value float64, labels map[string]string) {
-	fmt.Println("\n\nTEST ANGEL DELETE THIS COMMENT ")
 	labels = addDefaultLabels(labels, c)
 	switch metricName {
 	case GaugeMetricNameRequestTime:
