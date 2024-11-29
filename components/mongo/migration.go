@@ -17,15 +17,16 @@ func MigrateMongo(cfg ...*Config) error {
 		c = getConfig()
 	}
 
-	if c == nil || c.MigrationSource == "" {
+	if c == nil || c.MigrationsSource == "" {
+		logx.Info("No MigrationsSource config, will not apply migrations")
 		return nil
 	}
-	migrator, err := migrate.New(c.MigrationSource, c.url())
+	migrator, err := migrate.New(c.MigrationsSource, c.url())
 	if err != nil {
 		return err
 	}
 
-	logx.Info(fmt.Sprintf("Applying migrations from source %s", c.MigrationSource))
+	logx.Info(fmt.Sprintf("Applying migrations from source %s", c.MigrationsSource))
 
 	migErr := migrator.Up()
 

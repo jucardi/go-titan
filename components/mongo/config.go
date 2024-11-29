@@ -53,7 +53,7 @@ type Config struct {
 	TlsSkipVerifyHost bool `json:"tls_skip_verify_host" yaml:"tls_skip_verify_host"`
 
 	// MigrationSource indicates the source where migration scripts are located
-	MigrationSource string `json:"migration_source" yaml:"migration_source"`
+	MigrationsSource string `json:"migrations_source" yaml:"migrations_source"`
 }
 
 func (c *Config) opts() *options.ClientOptions {
