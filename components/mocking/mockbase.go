@@ -5,6 +5,7 @@ import "reflect"
 type IMock interface {
 	When(method string, condition func(args ...interface{}) bool, rets []interface{})
 	WhenDelayedRets(method string, condition func(args ...interface{}) bool, retProvider func() []interface{})
+	DynamicWhen(method string, condition func(args ...interface{}) bool, rets func(args ...interface{}) []interface{})
 	Times(method string) int
 	Invoke(method string, args ...interface{}) (ret []interface{})
 	ClearWhen()
@@ -20,8 +21,9 @@ type MockBase struct {
 
 type conditionSet struct {
 	match    func(args ...interface{}) bool
-	rets     []interface{}
 	provider func() []interface{}
+	match    func(args ...interface{}) bool
+	rets     func(args ...interface{}) []interface{}
 }
 
 func (m *MockBase) Init(interfaceRef interface{}) *MockBase {
@@ -47,24 +49,39 @@ func (m *MockBase) Init(interfaceRef interface{}) *MockBase {
 	return m
 }
 
-func (m *MockBase) When(method string, condition func(args ...interface{}) bool, rets []interface{}) {
+func (m *MockBase) ensureConditions(method string) {
 	if _, ok := m.conditions[method]; !ok {
 		m.conditions[method] = []*conditionSet{}
 	}
+}
+
+func (m *MockBase) When(method string, condition func(args ...interface{}) bool, rets []interface{}) {
+	m.ensureConditions(method)
+
 	m.conditions[method] = append(m.conditions[method], &conditionSet{
 		match: condition,
-		rets:  rets,
+		rets:  func(args ...interface{}) []interface{} { return rets },
 	})
 }
 
 func (m *MockBase) WhenDelayedRets(method string, condition func(args ...interface{}) bool, retProvider func() []interface{}) {
-	if _, ok := m.conditions[method]; !ok {
-		m.conditions[method] = []*conditionSet{}
-	}
+	m.ensureConditions(method)
+
 	m.conditions[method] = append(m.conditions[method], &conditionSet{
 		match:    condition,
 		provider: retProvider,
 	})
+}
+
+func (m *MockBase) DynamicWhen(method string, condition func(args ...interface{}) bool, rets func(args ...interface{}) []interface{}) {
+	m.ensureConditions(method)
+
+	conditionSet := &conditionSet{
+		match: condition,
+		rets:  rets,
+	}
+
+	m.conditions[method] = append(m.conditions[method], conditionSet)
 }
 
 func (m *MockBase) Times(method string) int {
@@ -95,7 +112,7 @@ func (m *MockBase) Invoke(method string, args ...interface{}) (ret []interface{}
 				if c.provider != nil {
 					return c.provider()
 				}
-				return c.rets
+				return c.rets(args...)
 			}
 		}
 	}
