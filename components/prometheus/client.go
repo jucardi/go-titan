@@ -36,18 +36,18 @@ func GetSingleton() *PrometheusClient {
 var RequestTimeGauge = prometheus.NewGaugeVec(prometheus.GaugeOpts{
 	Name: string(GaugeMetricNameRequestTime),
 	Help: "Request time of each request in milliseconds",
-}, []string{"endpointName", "hostname", "env"})
+}, []string{"endpointName", "hostname", "env", "taskSlot"})
 
 var RequestTimeHistogram = prometheus.NewHistogramVec(prometheus.HistogramOpts{
 	Name:    string(HistogramMetricNameRequestTime),
 	Help:    "Request time of each request in milliseconds",
 	Buckets: []float64{50, 100, 200, 300, 500, 800, 1300, 2100, 3400, 5500},
-}, []string{"endpointName", "hostname", "env"})
+}, []string{"endpointName", "hostname", "env", "taskSlot"})
 
 var ApiErrorCounter = prometheus.NewCounterVec(prometheus.CounterOpts{
 	Name: string(CounterApiErrors),
 	Help: "Total number of response errors in API",
-}, []string{"endpointName", "hostname", "env", "statusCode"})
+}, []string{"endpointName", "hostname", "env", "taskSlot", "statusCode"})
 
 func init() {
 	prometheus.MustRegister(RequestTimeGauge)
