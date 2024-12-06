@@ -25,6 +25,7 @@ func GetSingleton() *PrometheusClient {
 			ctx:      context.Background(),
 			hostname: hostname,
 			env:      os.Getenv("EXECUTION_ENV"),
+			taskSlot: os.Getenv("TASK_SLOT"),
 		}
 	})
 	return metricClientInstance
@@ -58,9 +59,9 @@ func init() {
 
 type PrometheusClient struct {
 	ctx      context.Context
-	mode     string
 	hostname string
 	env      string
+	taskSlot string
 }
 
 func (c *PrometheusClient) WithCtx(ctx context.Context) *PrometheusClient {
@@ -72,6 +73,7 @@ func (c *PrometheusClient) WithCtx(ctx context.Context) *PrometheusClient {
 func addDefaultLabels(labels map[string]string, c *PrometheusClient) map[string]string {
 	labels["hostname"] = c.hostname
 	labels["env"] = c.env
+	labels["taskSlot"] = c.taskSlot
 	return labels
 }
 
