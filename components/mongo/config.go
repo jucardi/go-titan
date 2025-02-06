@@ -60,11 +60,6 @@ type Config struct {
 }
 
 func (c *Config) opts() *options.ClientOptions {
-
-	// TODO: Delete these logs
-	logx.Debug("mongo connection url: ", c.MongoConnectionUrl)
-	logx.Debug("mongo connection host: ", c.Database)
-
 	if c.MongoConnectionUrl != "" {
 		return options.Client().ApplyURI(c.MongoConnectionUrl)
 	}
