@@ -54,9 +54,16 @@ type Config struct {
 
 	// MigrationSource indicates the source where migration scripts are located
 	MigrationSource string `json:"migration_source" yaml:"migration_source"`
+
+	// Optional mongo url to override all other fields
+	MongoConnectionUrl string `json:"mongo_connection_url" yaml:"mongo_connection_url"`
 }
 
 func (c *Config) opts() *options.ClientOptions {
+	if c.MongoConnectionUrl != "" {
+		return options.Client().ApplyURI(c.MongoConnectionUrl)
+	}
+
 	creds := ""
 	if c.Username != "" && c.Password != "" {
 		creds = fmt.Sprintf("%s:%s@", url.QueryEscape(c.Username), url.QueryEscape(c.Password))
